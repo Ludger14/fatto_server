@@ -1,0 +1,6 @@
+br\com\fatto\services\TaskService.class
+br\com\fatto\view\TaskDto.class
+br\com\fatto\repository\TaskRepository.class
+br\com\fatto\controllers\TaskController.class
+br\com\fatto\FattoApplication.class
+br\com\fatto\model\TaskModel.class
