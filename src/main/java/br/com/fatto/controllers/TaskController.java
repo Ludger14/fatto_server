@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/tasks")
-@CrossOrigin(origins = {"https://fattotarefa.netlify.app" }, maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost" }, maxAge = 3600)
 public class TaskController {
 	
 	@Autowired
