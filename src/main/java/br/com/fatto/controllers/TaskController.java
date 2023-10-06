@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/tasks")
-@CrossOrigin(origins = { "http://localhost:4200", "http://localhost" }, maxAge = 3600)
+@CrossOrigin(origins = { " https://angular-fatto-7c145733c166.herokuapp.com" }, maxAge = 3600)
 public class TaskController {
 	
 	@Autowired
