@@ -2,6 +2,8 @@ package br.com.fatto.services;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -75,37 +77,46 @@ public class TaskService {
 	
 	public TaskDto editTask(String nome, TaskModel taskModel) throws ParseException {
 		TaskDto task = new TaskDto();
-		
-		TaskModel newTask = taskRepository.checkNameTask(nome);
-		if(Objects.nonNull(newTask)) {			
+        TaskModel newTask = taskRepository.checkNameTask(nome);
+        if(Objects.nonNull(newTask)) {			
 			if (taskModel.getNome() == null || taskModel.getCusto() == null || taskModel.getDtLimite() == null) {
 				task.setSuccess(Boolean.FALSE);
 	            task.setMessage("Os campos Nome, Custo e Data Limite são obrigatórios.");
 	            return task;
 	        }
 			
-			List<TaskModel> compareTask = taskRepository.ordemApresentacaoAsc();
-			for(TaskModel outrotask: compareTask) {
-				if (taskModel.getNome().equals(outrotask.getNome())) {
-					task.setSuccess(Boolean.FALSE);
+			if (!nome.equals(taskModel.getNome())) {
+				TaskModel newTaskWithSameName = taskRepository.checkNameTask(taskModel.getNome());
+	            if (Objects.isNull(newTaskWithSameName)) {
+	            	newTask.setNome(taskModel.getNome());
+	    			newTask.setCusto(taskModel.getCusto());
+	    			newTask.setDtLimite(taskModel.getDtLimite());
+	    			
+	    			taskRepository.save(newTask);
+	    			
+	    			task.setMessage("A tarefa " + taskModel.getNome() + " foi salva com sucesso.");
+	    			task.setSuccess(Boolean.TRUE);
+	            } else {
+	            	task.setSuccess(Boolean.FALSE);
 					task.setMessage("Já existe uma tarefa com esse nome.");
 					return task;
-		        }
+	            }
+			}else {
+				newTask.setNome(taskModel.getNome());
+				newTask.setCusto(taskModel.getCusto());
+				newTask.setDtLimite(taskModel.getDtLimite());
+				
+				taskRepository.save(newTask);
+				
+				task.setMessage("A tarefa " + taskModel.getNome() + " foi salva com sucesso.");
+				task.setSuccess(Boolean.TRUE);
 			}
-			
-			newTask.setNome(taskModel.getNome());
-			newTask.setCusto(taskModel.getCusto());
-			newTask.setDtLimite(taskModel.getDtLimite());
-			
-			taskRepository.save(newTask);
 			
 			task.setId(taskModel.getId());
 			task.setNome(taskModel.getNome());
 			task.setCusto(taskModel.getCusto());
 			task.setDtLimite(taskModel.getDtLimite());
 			task.setOrdem_apresentacao(taskModel.getOrdem_apresentacao());
-			task.setMessage("A tarefa " + taskModel.getNome() + " foi editada com sucesso.");
-			task.setSuccess(Boolean.TRUE);
 			
 			return task;
 		}else {
